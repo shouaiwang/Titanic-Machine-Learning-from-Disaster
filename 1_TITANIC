@@ -1,0 +1,25 @@
+import pandas as pd
+import numpy as np
+
+# Load the Titanic dataset
+data = pd.read_csv("titanic.csv")
+
+# Exploratory data analysis
+print(data.head())  # View the first few rows of the dataset
+print(data.info())  # Get information about the dataset
+
+# Handle missing values
+data["Age"].fillna(data["Age"].median(), inplace=True)  # Fill missing Age values with median
+data["Embarked"].fillna(data["Embarked"].mode()[0], inplace=True)  # Fill missing Embarked values with mode
+
+# Correct data types
+data["Fare"] = data["Fare"].astype(float)  # Convert Fare column to float
+data["Age"] = data["Age"].astype(int)  # Convert Age column to integer
+
+# Remove outliers
+data = data[(np.abs(data["Fare"] - data["Fare"].mean()) / data["Fare"].std()) < 3]  # Remove Fare outliers (consider values within 3 standard deviations)
+
+# Save the cleaned dataset
+data.to_csv("cleaned_titanic.csv", index=False)
+
+print("Data cleaning and standardisation completed.")
